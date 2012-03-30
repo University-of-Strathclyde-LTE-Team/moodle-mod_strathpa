@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/strathpa/db" VERSION="20120117" COMMENT="XMLDB file for Moodle mod/strathpa"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="strathpa" COMMENT="Default comment for strathpa, please edit me" NEXT="strathpa_ratings">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="course"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="11" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="id" NEXT="assignment"/>
+        <FIELD NAME="assignment" TYPE="int" LENGTH="11" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" PREVIOUS="course" NEXT="frequency"/>
+        <FIELD NAME="frequency" TYPE="int" LENGTH="11" NOTNULL="false" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" PREVIOUS="assignment" NEXT="timemodified"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" PREVIOUS="frequency" NEXT="name"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="New Peer Assessment Activity" SEQUENCE="false" PREVIOUS="timemodified" NEXT="timeavailable"/>
+        <FIELD NAME="timeavailable" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" PREVIOUS="name" NEXT="timedue"/>
+        <FIELD NAME="timedue" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" PREVIOUS="timeavailable" NEXT="canedit"/>
+        <FIELD NAME="canedit" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="timedue" NEXT="lowerbound"/>
+        <FIELD NAME="lowerbound" TYPE="number" LENGTH="3" NOTNULL="false" UNSIGNED="true" DEFAULT="2.5" SEQUENCE="false" DECIMALS="2" PREVIOUS="canedit" NEXT="upperbound"/>
+        <FIELD NAME="upperbound" TYPE="number" LENGTH="3" NOTNULL="false" UNSIGNED="true" DEFAULT="3.5" SEQUENCE="false" DECIMALS="2" PREVIOUS="lowerbound" NEXT="intro"/>
+        <FIELD NAME="intro" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" COMMENT="introductory text" PREVIOUS="upperbound" NEXT="introformat"/>
+        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="intro"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="strathpa_ratings" COMMENT="Default comment for the table, please edit me" PREVIOUS="strathpa" NEXT="strathpa_comments">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="peerassessment"/>
+        <FIELD NAME="peerassessment" TYPE="int" LENGTH="11" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="id" NEXT="userid"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="11" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="peerassessment" NEXT="rating"/>
+        <FIELD NAME="rating" TYPE="int" LENGTH="5" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" PREVIOUS="userid" NEXT="timemodified"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="rating" NEXT="ratedby"/>
+        <FIELD NAME="ratedby" TYPE="int" LENGTH="11" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Userid of user who made the rating" PREVIOUS="timemodified"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="user_index" UNIQUE="false" FIELDS="userid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="strathpa_comments" COMMENT="Holds the comments that have been made by a student on a rating form." PREVIOUS="strathpa_ratings">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="userid"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="11" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="id of the user making the comment" PREVIOUS="id" NEXT="peerassessment"/>
+        <FIELD NAME="peerassessment" TYPE="int" LENGTH="11" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="ID of the peer assessment activity that the comment is related to." PREVIOUS="userid" NEXT="timemodified"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="11" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="time that the comment was last changed" PREVIOUS="peerassessment" NEXT="timecreated"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="11" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="time that the comment as made" PREVIOUS="timemodified" NEXT="studentcomment"/>
+        <FIELD NAME="studentcomment" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" PREVIOUS="timecreated"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="userid_pa_index" UNIQUE="false" FIELDS="userid, peerassessment"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>
